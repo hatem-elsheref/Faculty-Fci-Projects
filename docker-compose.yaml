@@ -1,0 +1,36 @@
+  version: "3"
+  services:
+    wordpress-database:
+      container_name: mysql-wp
+      image: mysql:latest
+      environment:
+        MYSQL_ROOT_PASSWORD: webserver
+        MYSQL_DATABASE: LMS
+        MYSQL_USER: hatem
+        MYSQL_PASSWORD: webserver
+      ports:
+      - 3307:3306
+      volumes:
+      - db:/var/lib/mysql
+    wprdpress-website:
+      container_name: website-wp
+      image: wordpress:latest
+      environment:
+        WORDPRESS_DB_HOST: mysql-wp
+        WORDPRESS_DB_USER: hatem
+        WORDPRESS_DB_PASSWORD: webserver
+        WORDPRESS_DB_NAME: LMS
+        WORDPRESS_TABLE_PREFIX: lms_
+      ports:
+          - 8080:80
+      volumes:
+          - wp:/var/www/html
+      depends_on:
+        - wordpress-database
+
+
+  volumes:
+    db:
+      driver: local
+    wp:
+      driver: local
